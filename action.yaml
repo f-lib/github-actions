@@ -1,0 +1,16 @@
+name: "check-large-file"
+description: "Check for large file"
+inputs:
+  threshold:
+    description: "File size upper limit"
+    required: false
+    default: "4096"
+outputs:
+  ok:
+    description: Whether current commit is acceptable
+    value: ${{ false  }}
+runs:
+  using: "composite"
+  steps:
+    - run: ./check.sh ${{ inputs.threshold }}
+      shell: bash
