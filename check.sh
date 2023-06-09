@@ -1,29 +1,14 @@
-#!/bin/bash
-#
-# An example hook script to verify what is about to be committed.
-# Called by "git commit" with no arguments. The hook should
-# exit with non-zero status after issuing an appropriate message if
-# it wants to stop the commit.
-#
-# To enable this hook, rename this file to "pre-commit".
-
-# Redirect output to stderr.
-exec 1>&2
-
-
-# Prevent large large
 FILE_SIZE_LIMIT_KB=$1
 CURRENT_DIR="$(pwd)"
 HAS_ERROR=""
 COUNTER=0
 
-# before git commit, check non git-lfs tracked files to limit size
-files=$(git diff --cached --name-only | sort | uniq)
+files=$(git ls-files)
 while read -r file; do
 	if [ "$file" = "" ]; then
 		continue
 	fi
-	file_path=$CURRENT_DIR/$file
+	file_path=$file
 	file_size=$(ls -l "$file_path" | awk '{print $5}')
 	file_size_kb=$((file_size / 1024))
 	if [ "$file_size_kb" -ge "$FILE_SIZE_LIMIT_KB" ]; then
@@ -33,9 +18,8 @@ while read -r file; do
 	fi
 done <<< "$files"
 
-# exit with error if any non-lfs tracked files are over file size limit
 if [ "$HAS_ERROR" != "" ]; then
-	echo "$COUNTER files are larger than permitted, please fix them before commit" >&2
+	echo "$COUNTER files are larger than permitted, please fix them before commit"
 	exit 1
 fi
 
