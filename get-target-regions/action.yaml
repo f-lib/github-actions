@@ -13,7 +13,7 @@ inputs:
 outputs:
   target_regions:
     description: Target regions as array (json string)
-    value: ${{ steps.fetch_ssm_param.outputs.result }}
+    value: ${{ steps.fetch_ssm_param.outputs.regions }}
 runs:
   using: "composite"
   steps:
