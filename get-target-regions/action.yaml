@@ -1,17 +1,14 @@
 name: get-target-regions
 description: Get target regions from SSM parameter store
 inputs:
-  aws_account_id:
-    description: AWS account id
+  role_arn:
+    description: Role to assume
     required: true
   ssm_param_name:
     description: SSM param name
     required: true
-  region:
+  ssm_param_region:
     description: SSM param region
-    required: true
-  role_arn:
-    description: Role to assume
     required: true
 outputs:
   target_regions:
