@@ -1,0 +1,23 @@
+name: get-env-from-label
+description: Get target env from pull request label
+inputs: {}
+outputs:
+  env:
+    description: Env. Empty string if no appropriate label was found.
+    value: ${{ steps.parse_labels.outputs.result }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/github-script@v6
+      id: parse_labels
+      with:
+        result-encoding: string
+        script: |
+          const labels_names = context.payload.pull_request.labels.map(x => x.name)
+          console.log('labels', context.payload.pull_request.labels)
+          const env_labels = labels_names.filter(x => x.startsWith("env: ")).map(x => x.substring(5))
+          console.log('env_labels', env_labels.join())
+          if (env_labels.length == 0) {
+            return ""
+          }
+          return env_labels[0]
